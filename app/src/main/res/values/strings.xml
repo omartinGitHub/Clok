@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Clok</string>
+    <string name="title_activity_main">Clok</string>
+    <string name="action_settings">Settings</string>
+    <string name="hour_mode">24-hour mode</string>
+    <string name="hour_mode_description">Activate 24-hour mode, default is 12-hour mode</string>
+    <string name="display_seconds">Display seconds</string>
+    <string name="display_seconds_description">Display seconds</string>
+    <string name="display_minutes">Display minutes</string>
+    <string name="display_minutes_description">Display minutes</string>
+    <string name="display_hours">Display hours</string>
+    <string name="display_hours_description">Display hours</string>
+</resources>

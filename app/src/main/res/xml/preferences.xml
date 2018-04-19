@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="hour_mode"
+        android:defaultValue="false"
+        android:title="@string/hour_mode"
+        android:summary="@string/hour_mode_description" />
+
+    <CheckBoxPreference
+        android:key="display_seconds"
+        android:defaultValue="true"
+        android:title="@string/display_seconds"
+        android:summary="@string/display_seconds_description" />
+
+    <CheckBoxPreference
+        android:key="display_minutes"
+        android:defaultValue="true"
+        android:title="@string/display_minutes"
+        android:summary="@string/display_minutes_description" />
+
+    <CheckBoxPreference
+        android:key="display_hours"
+        android:defaultValue="true"
+        android:title="@string/display_hours"
+        android:summary="@string/display_hours_description" />
+
+</PreferenceScreen>
