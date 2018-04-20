@@ -34,6 +34,7 @@ public class ClokView extends View
 	private final int secondsRadius = 20;
 	private final int syncDelay = 60_000;
 	private final int drawDelay = 1000;
+	private final float strokeWidth = 5.0f;
 
 	private final SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss dd.MM.yy", Locale.getDefault());
 
@@ -62,8 +63,10 @@ public class ClokView extends View
 		this.clockPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.clockPaint.setColor(color);
 		this.clockPaint.setStyle(Paint.Style.STROKE);
+		this.clockPaint.setStrokeWidth(this.strokeWidth);
 		this.tickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.tickPaint.setColor(color);
+		this.tickPaint.setStrokeWidth(this.strokeWidth);
 		this.timePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.timePaint.setColor(color);
 		this.timePaint.setTextSize(textSize);
