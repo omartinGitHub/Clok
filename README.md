@@ -1,0 +1,1 @@
+First version of yet another configurable clock for Android.
