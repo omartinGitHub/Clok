@@ -26,6 +26,7 @@ public class ClokView extends View
 	private Paint clockPaint;
 	private Paint tickPaint;
 	private Paint timePaint;
+	private Paint secondsPaint;
 
 	private final int padding = 30;
 	private final int hoursTickSize = 40;
@@ -36,7 +37,7 @@ public class ClokView extends View
 	private final int drawDelay = 1000;
 	private final float strokeWidth = 5.0f;
 
-	private final SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss dd.MM.yy", Locale.getDefault());
+	private final SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss dd.MM.yyyy", Locale.getDefault());
 
 	private TickMode tickMode = TickMode.MODE_12;
 	private boolean isHourHandDrawn = true;
@@ -67,6 +68,9 @@ public class ClokView extends View
 		this.tickPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.tickPaint.setColor(color);
 		this.tickPaint.setStrokeWidth(this.strokeWidth);
+		this.secondsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		this.secondsPaint.setColor(color);
+		this.secondsPaint.setAlpha(128);
 		this.timePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.timePaint.setColor(color);
 		this.timePaint.setTextSize(textSize);
@@ -145,6 +149,7 @@ public class ClokView extends View
 
 		drawPerimeter(canvas);
 		drawCenter(canvas);
+		drawBackground(canvas);
 		drawTicks(canvas, this.tickMode);
 		drawArms(canvas, this.tickMode);
 		drawTime(canvas);
@@ -174,9 +179,18 @@ public class ClokView extends View
 	}
 
 	/**
+	 * draw clock background
+	 * @param canvas where to draw
+	 */
+	private void drawBackground(final Canvas canvas)
+	{
+		// TODO
+	}
+
+	/**
 	 * draw ticks somewhere
 	 * @param canvas where to draw
-	 * @param tickMode
+	 * @param tickMode 12 or 24 hour mode
 	 */
 	private void drawTicks(final Canvas canvas, final TickMode tickMode)
 	{
@@ -219,7 +233,7 @@ public class ClokView extends View
 	/**
 	 * draw hours/minutes/seconds somewhere
 	 * @param canvas where to draw
-	 * @param tickMode
+	 * @param tickMode 12 or 24 hour mode
 	 */
 	private void drawArms(final Canvas canvas, final TickMode tickMode)
 	{
@@ -266,7 +280,7 @@ public class ClokView extends View
 			endX = 0;
 			endY = radius;
 			canvas.rotate(degrees);
-			canvas.drawCircle(0, -endY, this.secondsRadius, this.clockPaint);
+			canvas.drawCircle(0, -endY, this.secondsRadius, this.secondsPaint);
 			//		canvas.drawLine(0, 0, endX, -endY, this.tickPaint);
 		}
 
