@@ -23,6 +23,7 @@ import java.util.Locale;
  */
 public class ClokView extends View
 {
+	private Paint backgroundPaint;
 	private Paint clockPaint;
 	private Paint tickPaint;
 	private Paint timePaint;
@@ -37,9 +38,13 @@ public class ClokView extends View
 	private final int drawDelay = 1000;
 	private final float strokeWidth = 5.0f;
 
+	private int color = Color.BLACK;
+	private int backgroundColor = Color.WHITE;
+
 	private final SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss dd.MM.yyyy", Locale.getDefault());
 
 	private TickMode tickMode = TickMode.MODE_12;
+	private boolean isInvertColors = false;
 	private boolean isHourHandDrawn = true;
 	private boolean isMinuteHandDrawn = true;
 	private boolean isSecondHandDrawn = true;
@@ -58,9 +63,32 @@ public class ClokView extends View
 
 	private void init()
 	{
-		int color = Color.BLACK;
 		int textSize = getResources().getDimensionPixelSize(R.dimen.fontSize);
 
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+		Boolean modePrefs = sharedPref.getBoolean(SettingsActivity.KEY_PREF_HOUR_MODE, false);
+		this.isInvertColors = sharedPref.getBoolean(SettingsActivity.KEY_PREF_INVERT_COLORS, this.isInvertColors);
+		this.isSecondHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_SECONDS, this.isSecondHandDrawn);
+		this.isMinuteHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_MINUTES, this.isMinuteHandDrawn);
+		this.isHourHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_HOURS, this.isHourHandDrawn);
+
+		if(modePrefs)
+		{
+			this.tickMode = TickMode.MODE_24;
+		}
+		else
+		{
+			this.tickMode = TickMode.MODE_12;
+		}
+
+		if(this.isInvertColors)
+		{
+			this.color = Color.WHITE;
+			this.backgroundColor = Color.BLACK;
+		}
+
+		this.backgroundPaint = new Paint();
+		this.backgroundPaint.setColor(this.backgroundColor);
 		this.clockPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.clockPaint.setColor(color);
 		this.clockPaint.setStyle(Paint.Style.STROKE);
@@ -74,21 +102,6 @@ public class ClokView extends View
 		this.timePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.timePaint.setColor(color);
 		this.timePaint.setTextSize(textSize);
-
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-		Boolean modePrefs = sharedPref.getBoolean(SettingsActivity.KEY_PREF_HOUR_MODE, false);
-		this.isSecondHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_SECONDS, this.isSecondHandDrawn);
-		this.isMinuteHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_MINUTES, this.isMinuteHandDrawn);
-		this.isHourHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_HOURS, this.isHourHandDrawn);
-
-		if(modePrefs)
-		{
-			this.tickMode = TickMode.MODE_24;
-		}
-		else
-		{
-			this.tickMode = TickMode.MODE_12;
-		}
 
 		final Handler syncHandler = new Handler();
 		final AbstractRunnable syncRunnableCode = new SyncRunnable(syncHandler, ClokView.this.syncDelay);
@@ -147,12 +160,22 @@ public class ClokView extends View
 	{
 		super.onDraw(canvas);
 
+		drawBackground(canvas);
 		drawPerimeter(canvas);
 		drawCenter(canvas);
-		drawBackground(canvas);
 		drawTicks(canvas, this.tickMode);
-		drawArms(canvas, this.tickMode);
+		drawHands(canvas, this.tickMode);
+		drawNumbers(canvas, this.tickMode);
 		drawTime(canvas);
+	}
+
+	/**
+	 * draw clock background
+	 * @param canvas where to draw
+	 */
+	private void drawBackground(final Canvas canvas)
+	{
+		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), this.backgroundPaint);
 	}
 
 	/**
@@ -176,15 +199,6 @@ public class ClokView extends View
 		int[] center = getCenter();
 
 		canvas.drawCircle(center[0], center[1], this.centerRadius, this.clockPaint);
-	}
-
-	/**
-	 * draw clock background
-	 * @param canvas where to draw
-	 */
-	private void drawBackground(final Canvas canvas)
-	{
-		// TODO
 	}
 
 	/**
@@ -231,11 +245,21 @@ public class ClokView extends View
 	}
 
 	/**
+	 *
+	 * @param canvas where to draw
+	 * @param tickMode 12 or 24 hour mode
+	 */
+	private void drawNumbers(final Canvas canvas, final TickMode tickMode)
+	{
+		// TODO
+	}
+
+	/**
 	 * draw hours/minutes/seconds somewhere
 	 * @param canvas where to draw
 	 * @param tickMode 12 or 24 hour mode
 	 */
-	private void drawArms(final Canvas canvas, final TickMode tickMode)
+	private void drawHands(final Canvas canvas, final TickMode tickMode)
 	{
 		int nbrHoursTicks = tickMode.getNbrHoursTicks();
 		int radius = getRadius();

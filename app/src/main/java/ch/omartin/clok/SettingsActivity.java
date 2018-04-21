@@ -9,6 +9,7 @@ import android.os.Bundle;
 public class SettingsActivity extends AppCompatActivity
 {
 	public static final String KEY_PREF_HOUR_MODE = "hour_mode";
+	public static final String KEY_PREF_INVERT_COLORS = "invert_colors";
 	public static final String KEY_PREF_DISPLAY_SECONDS = "display_seconds";
 	public static final String KEY_PREF_DISPLAY_MINUTES = "display_minutes";
 	public static final String KEY_PREF_DISPLAY_HOURS = "display_hours";

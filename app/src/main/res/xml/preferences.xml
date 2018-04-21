@@ -8,6 +8,12 @@
         android:summary="@string/hour_mode_description" />
 
     <CheckBoxPreference
+        android:key="invert_colors"
+        android:defaultValue="false"
+        android:title="@string/invert_colors"
+        android:summary="@string/invert_colors_description" />
+
+    <CheckBoxPreference
         android:key="display_seconds"
         android:defaultValue="true"
         android:title="@string/display_seconds"
