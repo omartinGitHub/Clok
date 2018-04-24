@@ -163,6 +163,7 @@ public class ClokView extends View
 		drawBackground(canvas);
 		drawPerimeter(canvas);
 		drawCenter(canvas);
+		drawLightStatus(canvas, this.tickMode);
 		drawTicks(canvas, this.tickMode);
 		drawHands(canvas, this.tickMode);
 		drawNumbers(canvas, this.tickMode);
@@ -199,6 +200,16 @@ public class ClokView extends View
 		int[] center = getCenter();
 
 		canvas.drawCircle(center[0], center[1], this.centerRadius, this.clockPaint);
+	}
+
+	/**
+	 *
+	 * @param canvas
+	 * @param tickMode
+	 */
+	private void drawLightStatus(final Canvas canvas, final TickMode tickMode)
+	{
+		// TODO
 	}
 
 	/**
@@ -333,6 +344,37 @@ public class ClokView extends View
 
 			canvas.drawText(text, x, y, this.timePaint);
 		}
+	}
+
+	/**
+	 * fill dial
+	 * @param canvas
+	 * @param from
+	 * @param to
+	 * @param paint
+	 */
+	private void fillHours(final Canvas canvas, final int from, final int to, final Paint paint)
+	{
+		if(from > to)
+		{
+			throw new IllegalArgumentException("from is bigger than to : " + from + " " + to);
+		}
+
+		int[] center = getCenter();
+		int centerX = center[0];
+		int centerY = center[1];
+		int radius = getRadius();
+
+		canvas.save();
+		canvas.translate(centerX, centerY);
+
+		// TODO
+//		canvas.drawLine();
+//		canvas.drawArc();
+//		canvas.drawLine();
+//		canvas.drawPath();
+
+		canvas.restore();
 	}
 
 	@NonNull
