@@ -30,6 +30,7 @@ public class ClokView extends View
 	private Paint tickPaint;
 	private Paint timePaint;
 	private Paint secondsPaint;
+	private Paint lightStatusPaint;
 
 	private final int padding = 30;
 	private final int hoursTickSize = 40;
@@ -104,6 +105,8 @@ public class ClokView extends View
 		this.timePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.timePaint.setColor(color);
 		this.timePaint.setTextSize(textSize);
+		this.lightStatusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		this.lightStatusPaint.setStyle(Paint.Style.FILL);
 
 		final Handler syncHandler = new Handler();
 		final AbstractRunnable syncRunnableCode = new SyncRunnable(syncHandler, ClokView.this.syncDelay);
@@ -124,11 +127,17 @@ public class ClokView extends View
 	private synchronized void synchronize()
 	{
 		// use this date for the next cycle until next sync.
-		this.calendar = Calendar.getInstance(Locale.getDefault());
+		this.calendar = Calendar.getInstance();
 		this.hours = calendar.get(Calendar.HOUR);
 		this.minutes = calendar.get(Calendar.MINUTE);
 		this.seconds = calendar.get(Calendar.SECOND);
 		final Date date = calendar.getTime();
+
+		if(tickMode == TickMode.MODE_24)
+		{
+			this.hours = (this.hours + 12) % 24;
+		}
+
 		Log.d("sync ", this.formatter.format(date));
 	}
 
@@ -163,9 +172,9 @@ public class ClokView extends View
 		super.onDraw(canvas);
 
 		drawBackground(canvas);
+		drawLightStatus(canvas, this.tickMode);
 		drawPerimeter(canvas);
 		drawCenter(canvas);
-		drawLightStatus(canvas, this.tickMode);
 		drawTicks(canvas, this.tickMode);
 		drawHands(canvas, this.tickMode);
 		drawNumbers(canvas, this.tickMode);
@@ -206,15 +215,24 @@ public class ClokView extends View
 
 	/**
 	 *
-	 * @param canvas
-	 * @param tickMode
+	 * @param canvas where to draw
+	 * @param tickMode 12 or 24 hour mode
 	 */
 	private void drawLightStatus(final Canvas canvas, final TickMode tickMode)
 	{
-//		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//		paint.setStyle(Paint.Style.FILL);
-//		paint.setColor(Color.BLACK);
-//		fillHours(canvas, paint, tickMode, 3, 5);
+		if(tickMode == TickMode.MODE_24)
+		{
+			// night
+			this.lightStatusPaint.setColor(Color.BLACK);
+			this.lightStatusPaint.setAlpha(128);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 0, 8);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 20, 24);
+
+			// day
+			this.lightStatusPaint.setColor(Color.WHITE);
+			this.lightStatusPaint.setAlpha(128);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 8, 20);
+		}
 	}
 
 	/**
@@ -354,11 +372,11 @@ public class ClokView extends View
 	/**
 	 * displays hours on dial background
 	 * TODO
-	 * @param canvas
-	 * @param paint
-	 * @param tickMode
-	 * @param from
-	 * @param to
+	 * @param canvas where to draw
+	 * @param paint how to draw
+	 * @param tickMode 12 or 24 hour mode
+	 * @param from hour to start from
+	 * @param to hour to end to
 	 */
 	private void fillHours(final Canvas canvas, final Paint paint, TickMode tickMode, final int from, final int to)
 	{
@@ -439,7 +457,7 @@ public class ClokView extends View
 
 		void postRunnable(boolean delay)
 		{
-			boolean result = false;
+			boolean result;
 
 			if(!delay)
 			{
