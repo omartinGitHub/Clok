@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -209,7 +211,10 @@ public class ClokView extends View
 	 */
 	private void drawLightStatus(final Canvas canvas, final TickMode tickMode)
 	{
-		// TODO
+//		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//		paint.setStyle(Paint.Style.FILL);
+//		paint.setColor(Color.BLACK);
+//		fillHours(canvas, paint, tickMode, 3, 5);
 	}
 
 	/**
@@ -347,17 +352,25 @@ public class ClokView extends View
 	}
 
 	/**
-	 * fill dial
+	 * displays hours on dial background
+	 * TODO
 	 * @param canvas
+	 * @param paint
+	 * @param tickMode
 	 * @param from
 	 * @param to
-	 * @param paint
 	 */
-	private void fillHours(final Canvas canvas, final int from, final int to, final Paint paint)
+	private void fillHours(final Canvas canvas, final Paint paint, TickMode tickMode, final int from, final int to)
 	{
+		int maxHours = tickMode.getNbrHoursTicks();
+
 		if(from > to)
 		{
 			throw new IllegalArgumentException("from is bigger than to : " + from + " " + to);
+		}
+		if(from > maxHours)
+		{
+			throw new IllegalArgumentException("from is bigger than maxHours : " + from + " " + maxHours);
 		}
 
 		int[] center = getCenter();
@@ -365,15 +378,23 @@ public class ClokView extends View
 		int centerY = center[1];
 		int radius = getRadius();
 
+		RectF rect = new RectF(-radius, -radius, radius, radius);
+		float startAngle = (from / (float) maxHours) * 360.0f;
+		float sweepAngle = ((to - from) / (float) maxHours) * 360.0f;
+//		Log.d("fill ", rect.toString() + " " + startAngle + " " + sweepAngle);
+
+		// move to center of clock, change reference angle
 		canvas.save();
 		canvas.translate(centerX, centerY);
+		canvas.rotate(-90);
 
-		// TODO
-//		canvas.drawLine();
-//		canvas.drawArc();
-//		canvas.drawLine();
-//		canvas.drawPath();
+		Path path = new Path();
+		path.moveTo(0, 0);
+		path.arcTo(rect, startAngle, sweepAngle, true);
+		path.lineTo(0, 0);
+		path.close();
 
+		canvas.drawPath(path, paint);
 		canvas.restore();
 	}
 
