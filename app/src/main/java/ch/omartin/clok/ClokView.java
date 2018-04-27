@@ -128,15 +128,18 @@ public class ClokView extends View
 	{
 		// use this date for the next cycle until next sync.
 		this.calendar = Calendar.getInstance();
-		this.hours = calendar.get(Calendar.HOUR);
 		this.minutes = calendar.get(Calendar.MINUTE);
 		this.seconds = calendar.get(Calendar.SECOND);
 		final Date date = calendar.getTime();
 
 		if(tickMode == TickMode.MODE_24)
 		{
-			this.hours = (this.hours + 12) % 24;
+			this.hours = calendar.get(Calendar.HOUR_OF_DAY);
 		}
+		else
+        {
+            this.hours = calendar.get(Calendar.HOUR);
+        }
 
 		Log.d("sync ", this.formatter.format(date));
 	}
