@@ -213,7 +213,9 @@ public class ClokView extends View
 	{
 		int[] center = getCenter();
 
+		this.clockPaint.setStyle(Paint.Style.FILL);
 		canvas.drawCircle(center[0], center[1], this.centerRadius, this.clockPaint);
+		this.clockPaint.setStyle(Paint.Style.STROKE);
 	}
 
 	/**
@@ -229,7 +231,7 @@ public class ClokView extends View
 			this.lightStatusPaint.setColor(Color.BLACK);
 			this.lightStatusPaint.setAlpha(128);
 			fillHours(canvas, this.lightStatusPaint, tickMode, 0, 8);
-			fillHours(canvas, this.lightStatusPaint, tickMode, 20, 24);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 21, 24);
 
 			// day
 			this.lightStatusPaint.setColor(Color.WHITE);
@@ -288,7 +290,11 @@ public class ClokView extends View
 	 */
 	private void drawNumbers(final Canvas canvas, final TickMode tickMode)
 	{
+		int[] center = getCenter();
+		int radius = getRadius();
+
 		// TODO
+//		canvas.drawCircle(center[0], center[1], radius / 2, this.clockPaint);
 	}
 
 	/**
@@ -374,7 +380,6 @@ public class ClokView extends View
 
 	/**
 	 * displays hours on dial background
-	 * TODO
 	 * @param canvas where to draw
 	 * @param paint how to draw
 	 * @param tickMode 12 or 24 hour mode
@@ -437,45 +442,6 @@ public class ClokView extends View
 		int radius = (Math.min(width, height) / 2) - this.padding;
 
 		return radius;
-	}
-
-	/**
-	 * abstract runnable
-	 */
-	private abstract class AbstractRunnable implements Runnable
-	{
-		final Handler handler;
-		final int delay;
-
-		AbstractRunnable(Handler handler, int delay)
-		{
-			this.handler = handler;
-			this.delay = delay;
-		}
-
-		void postRunnable()
-		{
-			postRunnable(false);
-		}
-
-		void postRunnable(boolean delay)
-		{
-			boolean result;
-
-			if(!delay)
-			{
-				result = handler.post(this);
-			}
-			else
-			{
-				result = handler.postDelayed(this, this.delay);
-			}
-
-			if(!result)
-			{
-				Log.e("runnable result", "could not be posted");
-			}
-		}
 	}
 
 	/**
