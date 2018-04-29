@@ -236,7 +236,7 @@ public class ClokView extends View
 			// day
 			this.lightStatusPaint.setColor(Color.WHITE);
 			this.lightStatusPaint.setAlpha(128);
-			fillHours(canvas, this.lightStatusPaint, tickMode, 8, 20);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 8, 21);
 		}
 	}
 
@@ -296,7 +296,28 @@ public class ClokView extends View
 		int radius = getRadius();
 
 		// TODO
-//		canvas.drawCircle(center[0], center[1], radius / 2, this.clockPaint);
+		int nbrHoursTicks = tickMode.getNbrHoursTicks();
+		float degreesPerTick = 360.0f / nbrHoursTicks;
+		float x = 0;
+		float y = 0 - (radius * 0.75f);
+		float textSize = this.tickPaint.getTextSize();
+
+		canvas.save();
+		canvas.translate(center[0], center[1]);
+		this.tickPaint.setTextSize(40);
+
+		// hours
+		for(int i=0; i<nbrHoursTicks; i++)
+		{
+			Rect bounds = new Rect();
+			String text = String.valueOf((i + 1) % 25);
+			this.tickPaint.getTextBounds(text, 0, text.length(), bounds);
+			canvas.rotate(degreesPerTick);
+			canvas.drawText(text, x - (bounds.width() / 2), y, this.tickPaint);
+		}
+
+		canvas.restore();
+		this.tickPaint.setTextSize(textSize);
 	}
 
 	/**
