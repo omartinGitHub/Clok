@@ -386,6 +386,7 @@ public class ClokView extends View
 	{
 		int radius = getRadius();
 		int[] center = getCenter();
+		int margin = 10;
 
 		if(this.calendar != null)
 		{
@@ -398,6 +399,14 @@ public class ClokView extends View
 			float y = center[1] + (radius / 2.0f);
 
 			canvas.drawText(text, x, y, this.timePaint);
+			Paint.Style style = this.timePaint.getStyle();
+			this.timePaint.setStyle(Paint.Style.STROKE);
+			canvas.drawRect(x - margin,
+					y - bounds.height() - margin,
+					x + bounds.width() + (2 * margin),
+					y + (2 * margin),
+					this.timePaint);
+			this.timePaint.setStyle(style);
 		}
 	}
 
