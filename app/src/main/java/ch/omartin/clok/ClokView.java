@@ -256,31 +256,33 @@ public class ClokView extends View
 		float endX = startX;
 		float endY = startY + this.hoursTickSize;
 
+		canvas.save();
+		canvas.translate(center[0], center[1]);
+
 		// hours
 		for(int i=0; i<nbrHoursTicks; i++)
 		{
-			float degrees = i * degreesPerTick;
-			canvas.save();
-			canvas.translate(center[0], center[1]);
-			canvas.rotate(degrees);
+			canvas.rotate(degreesPerTick);
 			canvas.drawLine(startX, startY, endX, endY, this.tickPaint);
-			canvas.restore();
 		}
+
+		canvas.restore();
 
 		int nbrMinutesTicks = tickMode.getNbrMinutesTicks();
 		degreesPerTick = 360.0f / nbrMinutesTicks;
 		endY = startY + this.minutesTickSize;
 
+		canvas.save();
+		canvas.translate(center[0], center[1]);
+
 		// minutes
 		for(int i=0; i<nbrMinutesTicks; i++)
 		{
-			float degrees = i * degreesPerTick;
-			canvas.save();
-			canvas.translate(center[0], center[1]);
-			canvas.rotate(degrees);
+			canvas.rotate(degreesPerTick);
 			canvas.drawLine(startX, startY, endX, endY, this.tickPaint);
-			canvas.restore();
 		}
+
+		canvas.restore();
 	}
 
 	/**
