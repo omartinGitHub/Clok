@@ -6,4 +6,9 @@
         android:title="@string/action_settings"
         app:showAsAction="never|collapseActionView" />
 
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/about_settings"
+        app:showAsAction="never|collapseActionView" />
+
 </menu>
