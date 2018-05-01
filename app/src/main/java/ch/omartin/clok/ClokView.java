@@ -397,16 +397,21 @@ public class ClokView extends View
 			this.timePaint.getTextBounds(text, 0, text.length(), bounds);
 			float x = center[0] - (bounds.width() / 2);
 			float y = center[1] + (radius / 2.0f);
+			float left = x - margin;
+			float top = y - bounds.height() - margin;
+			float right = x + bounds.width() + (2 * margin);
+			float bottom = y + (2 * margin);
 
-			canvas.drawText(text, x, y, this.timePaint);
+			this.timePaint.setColor(getBackColor());
+			this.timePaint.setAlpha(128);
+			canvas.drawRect(left, top, right, bottom, this.timePaint);
 			Paint.Style style = this.timePaint.getStyle();
+			this.timePaint.setColor(getFrontColor());
+			this.timePaint.setAlpha(255);
 			this.timePaint.setStyle(Paint.Style.STROKE);
-			canvas.drawRect(x - margin,
-					y - bounds.height() - margin,
-					x + bounds.width() + (2 * margin),
-					y + (2 * margin),
-					this.timePaint);
+			canvas.drawRect(left, top, right, bottom, this.timePaint);
 			this.timePaint.setStyle(style);
+			canvas.drawText(text, x, y, this.timePaint);
 		}
 	}
 
@@ -439,7 +444,6 @@ public class ClokView extends View
 		RectF rect = new RectF(-radius, -radius, radius, radius);
 		float startAngle = (from / (float) maxHours) * 360.0f;
 		float sweepAngle = ((to - from) / (float) maxHours) * 360.0f;
-//		Log.d("fill ", rect.toString() + " " + startAngle + " " + sweepAngle);
 
 		// move to center of clock, change reference angle
 		canvas.save();
@@ -474,6 +478,16 @@ public class ClokView extends View
 		int radius = (Math.min(width, height) / 2) - this.padding;
 
 		return radius;
+	}
+
+	private int getFrontColor()
+	{
+		return this.color;
+	}
+
+	private int getBackColor()
+	{
+		return this.backgroundColor;
 	}
 
 	/**
