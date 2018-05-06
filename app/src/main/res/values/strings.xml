@@ -3,6 +3,7 @@
     <string name="title_activity_main">Clok</string>
     <string name="action_settings">Settings</string>
     <string name="about_settings">About</string>
+    <string name="version_text">Version</string>
     <string name="hour_mode">24-hour mode</string>
     <string name="hour_mode_description">Activate 24-hour mode, default is 12-hour mode</string>
     <string name="invert_colors">Invert colors</string>

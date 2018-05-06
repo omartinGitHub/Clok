@@ -66,6 +66,9 @@ public class ClokView extends View
 
 	private void init()
 	{
+		Log.d("version code", String.valueOf(BuildConfig.VERSION_CODE));
+		Log.d("version name", BuildConfig.VERSION_NAME);
+
 		int textSize = getResources().getDimensionPixelSize(R.dimen.fontSize);
 
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -230,13 +233,13 @@ public class ClokView extends View
 			// night
 			this.lightStatusPaint.setColor(Color.BLACK);
 			this.lightStatusPaint.setAlpha(128);
-			fillHours(canvas, this.lightStatusPaint, tickMode, 0, 8);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 0, 7);
 			fillHours(canvas, this.lightStatusPaint, tickMode, 21, 24);
 
 			// day
 			this.lightStatusPaint.setColor(Color.WHITE);
 			this.lightStatusPaint.setAlpha(128);
-			fillHours(canvas, this.lightStatusPaint, tickMode, 8, 21);
+			fillHours(canvas, this.lightStatusPaint, tickMode, 7, 21);
 		}
 	}
 

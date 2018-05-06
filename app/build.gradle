@@ -1,4 +1,12 @@
+plugins {
+    id 'com.gladed.androidgitversion' version '0.4.3'
+}
+
 apply plugin: 'com.android.application'
+
+androidGitVersion {
+    codeFormat 'MNP'
+}
 
 android {
     compileSdkVersion 27
@@ -6,8 +14,8 @@ android {
         applicationId "ch.omartin.clok"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,6 +34,6 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
