@@ -44,7 +44,12 @@ public class ClokView extends View
 	private int color = Color.BLACK;
 	private int backgroundColor = Color.WHITE;
 
-	private final SimpleDateFormat formatter = new SimpleDateFormat("H:mm:ss dd.MM.yyyy", Locale.getDefault());
+	private final String datePattern = "dd.MM.yyyy";
+	private final String timePattern = "H:mm:ss";
+	private final Locale locale = Locale.getDefault();
+	private final SimpleDateFormat dateFormatter = new SimpleDateFormat(this.datePattern, this.locale);
+	private final SimpleDateFormat timeFormatter = new SimpleDateFormat(this.timePattern, this.locale);
+	private final SimpleDateFormat formatter = new SimpleDateFormat(this.datePattern + " " + this.timePattern, this.locale);
 
 	private TickMode tickMode = TickMode.MODE_12;
 	private boolean isInvertColors = false;
@@ -393,17 +398,23 @@ public class ClokView extends View
 
 		if(this.calendar != null)
 		{
-			Rect bounds = new Rect();
+			Rect dateBounds = new Rect();
+			Rect timeBounds = new Rect();
 			Calendar calendar = Calendar.getInstance(Locale.getDefault());
 			Date date = calendar.getTime();
-			String text = this.formatter.format(date);
-			this.timePaint.getTextBounds(text, 0, text.length(), bounds);
-			float x = center[0] - (bounds.width() / 2);
+			String dateText = this.dateFormatter.format(date);
+			String timeText = this.timeFormatter.format(date);
+			this.timePaint.getTextBounds(dateText, 0, dateText.length(), dateBounds);
+			this.timePaint.getTextBounds(timeText, 0, timeText.length(), timeBounds);
+			// height of
+			float height = dateBounds.height() + timeBounds.height() + (2 * margin);
+			float width = Math.max(dateBounds.width(), timeBounds.width()) + (2 * margin);
+			float x = center[0] - (width / 2);
 			float y = center[1] + (radius / 2.0f);
 			float left = x - margin;
-			float top = y - bounds.height() - margin;
-			float right = x + bounds.width() + (2 * margin);
-			float bottom = y + (2 * margin);
+			float top = y - height - margin;
+			float right = x + width;
+			float bottom = y;
 
 			this.timePaint.setColor(getBackColor());
 			this.timePaint.setAlpha(128);
@@ -414,8 +425,51 @@ public class ClokView extends View
 			this.timePaint.setStyle(Paint.Style.STROKE);
 			canvas.drawRect(left, top, right, bottom, this.timePaint);
 			this.timePaint.setStyle(style);
-			canvas.drawText(text, x, y, this.timePaint);
+
+			canvas.save();
+			canvas.translate(left + margin, top + margin);
+			drawMultipleLines(new String[] {timeText, dateText}, canvas, this.timePaint, margin);
+			canvas.restore();
 		}
+	}
+
+	private int[] drawMultipleLines(String[] lines, Canvas canvas, Paint paint, int margin)
+	{
+		int[] widths = new int[lines.length];
+		int[] heights = new int[lines.length];
+		Rect bounds = new Rect();
+		int maxWidth = 0;
+		int totalHeight = 0;
+		int offset = 0;
+
+		// get required metrics
+		for(int i=0; i<lines.length; i++)
+		{
+			String line = lines[i];
+			paint.getTextBounds(line, 0, line.length(), bounds);
+			widths[i] = bounds.width();
+			heights[i] = bounds.height();
+			maxWidth = Math.max(maxWidth, widths[i]);
+			totalHeight += heights[i];
+		}
+
+		int center = maxWidth / 2;
+
+		// draw each line centered
+		for(int i=0; i<lines.length; i++)
+		{
+			offset += heights[i];
+			String line = lines[i];
+			int x = center - (widths[i] / 2);
+			int y = offset;
+			canvas.drawText(line, x, y, paint);
+			offset += margin;		}
+
+		int[] result = new int[2];
+		result[0] = maxWidth;
+		result[1] = totalHeight;
+
+		return result;
 	}
 
 	/**
