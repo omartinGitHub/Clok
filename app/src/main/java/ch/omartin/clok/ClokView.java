@@ -37,8 +37,8 @@ public class ClokView extends View
 	private final int minutesTickSize = 20;
 	private final int centerRadius = 30;
 	private final int secondsRadius = 20;
-	private final int syncDelay = 60_000;
-	private final int drawDelay = 1000;
+	private final int secondDelay = 1000;
+	private final int minuteDelay = 60_000;
 	private final float strokeWidth = 5.0f;
 
 	private int color = Color.BLACK;
@@ -46,9 +46,11 @@ public class ClokView extends View
 
 	private final String datePattern = "dd.MM.yyyy";
 	private final String timePattern = "H:mm:ss";
+	private final String timeWithoutSecondsPattern = "H:mm";
 	private final Locale locale = Locale.getDefault();
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat(this.datePattern, this.locale);
 	private final SimpleDateFormat timeFormatter = new SimpleDateFormat(this.timePattern, this.locale);
+	private final SimpleDateFormat timeWithoutSecondsFormatter = new SimpleDateFormat(this.timeWithoutSecondsPattern, this.locale);
 	private final SimpleDateFormat formatter = new SimpleDateFormat(this.datePattern + " " + this.timePattern, this.locale);
 
 	private TickMode tickMode = TickMode.MODE_12;
@@ -82,6 +84,8 @@ public class ClokView extends View
 		this.isSecondHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_SECONDS, this.isSecondHandDrawn);
 		this.isMinuteHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_MINUTES, this.isMinuteHandDrawn);
 		this.isHourHandDrawn = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DISPLAY_HOURS, this.isHourHandDrawn);
+		int syncDelay = this.minuteDelay;
+		int drawDelay = this.secondDelay;
 
 		if(modePrefs)
 		{
@@ -96,6 +100,11 @@ public class ClokView extends View
 		{
 			this.color = Color.WHITE;
 			this.backgroundColor = Color.BLACK;
+		}
+
+		if(!this.isSecondHandDrawn)
+		{
+			drawDelay = this.minuteDelay;
 		}
 
 		this.backgroundPaint = new Paint();
@@ -117,13 +126,13 @@ public class ClokView extends View
 		this.lightStatusPaint.setStyle(Paint.Style.FILL);
 
 		final Handler syncHandler = new Handler();
-		final AbstractRunnable syncRunnableCode = new SyncRunnable(syncHandler, ClokView.this.syncDelay);
+		final AbstractRunnable syncRunnableCode = new SyncRunnable(syncHandler, syncDelay);
 
 		// post
 		syncRunnableCode.postRunnable();
 
 		final Handler drawHandler = new Handler();
-		final AbstractRunnable drawRunnable = new DrawRunnable(drawHandler, ClokView.this.drawDelay);
+		final AbstractRunnable drawRunnable = new DrawRunnable(drawHandler, drawDelay);
 
 		// Start the initial runnable task by posting through the handler
 		drawRunnable.postRunnable();
@@ -404,6 +413,12 @@ public class ClokView extends View
 			Date date = calendar.getTime();
 			String dateText = this.dateFormatter.format(date);
 			String timeText = this.timeFormatter.format(date);
+
+			if(!this.isSecondHandDrawn)
+			{
+				timeText = this.timeWithoutSecondsFormatter.format(date);
+			}
+
 			this.timePaint.getTextBounds(dateText, 0, dateText.length(), dateBounds);
 			this.timePaint.getTextBounds(timeText, 0, timeText.length(), timeBounds);
 			// height of
